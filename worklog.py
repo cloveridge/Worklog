@@ -1,3 +1,15 @@
+"""Command-line Worklog program.
+Author: Christian Loveridge
+Version 1.0 date: 02/07/2017
+A simple command-line tool which stores, displays, and saves a CRUD-y
+worklog for the user. Each entry can hold a date, a taskname, the number
+of minutes spent working on it, and some notes about what was accomplished.
+
+Entries are stored in a CSV file named "tasklog.csv", and can be displayed
+through a text menu.
+"""
+
+
 import datetime
 import os
 import re
@@ -15,7 +27,17 @@ def cls():
 
 
 def search_menu(complete_list):
-    """The menu which appears to let users choose a search method."""
+    """The menu which appears to let users choose a search method.
+
+    Allows the user to select a search method, then searches through the
+    complete list and passes only matching entries to the display function.
+    Any edited or deleted entries are fixed, and returned.
+
+    :param complete_list: The complete list from the "tasklog.csv" file.
+
+    :return: An updated version of the list, which omits deleted entries
+            and updates edited entries.
+    """
 
     while True:
         cls()
@@ -43,6 +65,7 @@ def search_menu(complete_list):
             input("[Press Enter] and then please type D, R, S, T or B")
             continue
 
+        # Gets a filtered list, based on date, string, regex, or minutes
         if read_input == "D":
             filtered_list = date_filter(complete_list)
         elif read_input == "R":
@@ -52,6 +75,7 @@ def search_menu(complete_list):
         elif read_input == "T":
             filtered_list = minutes_filter(complete_list)
 
+        # Passes the filtered list to the display function
         if len(filtered_list):
             filtered_list, deleted_ids = display_list(filtered_list)
             for item in complete_list:
@@ -77,11 +101,11 @@ def search_menu(complete_list):
 def date_filter(complete_list):
     """Takes a list and filters it based on date.
 
-    Receives a list of Entry objects, then prompts users toeither choose a
+    Receives a list of Entry objects, then prompts users to either choose a
     valid, specific date from a list, or to provide a range of dates. Then it
     finds all corresponding entries, and returns the filtered list.
 
-    complete_list: an unfiltered list of all entries.
+    :param complete_list: an unfiltered list of all entries.
 
     :returns: a list of relevant entries
     """
@@ -91,8 +115,12 @@ def date_filter(complete_list):
     while True:
         cls()
         print("Would you like a [L]ist of dates, or choose a [R]ange?")
-        read_input = input("> ")[0].upper()
+        try:
+            read_input = input("> ")[0].upper()
+        except:
+            continue
         if read_input == "L":
+            # Display a list of dates to choose from
             chosen_date = ""
             while True:
                 # Display a list of dates, and have them pick one
@@ -120,7 +148,6 @@ def date_filter(complete_list):
                 except:
                     input("[Press Enter] then please type a date above")
                     continue
-
             for item in complete_list:
                 if str(item.get_readable_date()) == chosen_date:
                     filtered_list.append(item)
@@ -128,15 +155,15 @@ def date_filter(complete_list):
         elif read_input == "R":
             # Get 2 dates to search between
             date1, date2 = get_date_range()
-            for entry in complete_list:
-                entry_date = entry.get_readable_date()
+            for item in complete_list:
+                entry_date = item.get_readable_date()
                 temp_date = datetime.date(
                     int(entry_date[6:10]),
                     int(entry_date[0:2]),
                     int(entry_date[3:5])
                 )
                 if date1 <= temp_date <= date2:
-                    filtered_list.append(entry)
+                    filtered_list.append(item)
             break
         else:
             input("[Press Enter] and then please type L or R")
@@ -144,12 +171,22 @@ def date_filter(complete_list):
 
 
 def regex_filter(complete_list):
+    """Takes a list and filters it based on a regex pattern.
+
+    Receives a list of Entry objects, then prompts users to provide a
+    regex pattern. Then it finds all corresponding entries, and returns
+    the filtered list.
+
+    :param complete_list: an unfiltered list of all entries.
+
+    :returns: a list of relevant entries
+    """
     filtered_list = []
     while True:
         cls()
         print("Please enter the Regex pattern to search for, without quotes:")
         print("Example usage: input of ""\d{3}-\d{4}"" would return ")
-        print("a result like 555-5555.")
+        print("a result like 555-5555. Use \w for letters and \s for spaces.")
         print("[C]ancel")
         read_input = input("> ")
         if read_input.upper() == "C":
@@ -168,6 +205,16 @@ def regex_filter(complete_list):
 
 
 def string_filter(complete_list):
+    """Takes a list and filters it based on a string.
+
+    Receives a list of Entry objects, then prompts users to provide a
+    search string. Then it finds all corresponding entries, and returns
+    the filtered list.
+
+    :param complete_list: an unfiltered list of all entries.
+
+    :returns: a list of relevant entries
+    """
     filtered_list = []
     while True:
         cls()
@@ -176,6 +223,8 @@ def string_filter(complete_list):
         read_input = input("> ")
         if read_input == "CANCEL":
             break
+        elif not read_input:
+            continue
         else:
             read_input = re.compile(read_input, re.IGNORECASE)
             for item in complete_list:
@@ -187,6 +236,10 @@ def string_filter(complete_list):
 
 
 def get_date_range():
+    """Prompts the user to provide a range of two formatted dates.
+
+    :return date1, date2: Two dates which can be searched between.
+    """
     date1 = datetime.date(1900, 1, 1)
     date2 = datetime.date(1900, 1, 1)
     while True:
@@ -227,6 +280,16 @@ def get_date_range():
 
 
 def minutes_filter(complete_list):
+    """Takes a list and filters it based on minutes worked.
+
+    Receives a list of Entry objects, then prompts users to choose a range
+    of numbers. Then it finds all corresponding entries, and returns the
+    filtered list.
+
+    :param complete_list: an unfiltered list of all entries.
+
+    :returns: a list of relevant entries
+    """
     filtered_list = []
     first_num = 0
     second_num = 0
@@ -240,7 +303,9 @@ def minutes_filter(complete_list):
         except TypeError:
             input("[Press Enter] and try a number greater than zero.")
         else:
-            break
+            if first_num > 0:
+                break
+            continue
     while True:
         cls()
         print("Please enter a number higher than {}, or [Press Enter].".format(
@@ -248,10 +313,12 @@ def minutes_filter(complete_list):
         ))
         try:
             second_num = input("> ")
-            if second_num == "":
+            if not second_num:
                 second_num = first_num
-            else:
+            elif second_num >= first_num:
                 second_num = int(second_num)
+            else:
+                continue
             break
         except ValueError:
             input("[Press Enter] and try a number greater than zero.")
@@ -260,29 +327,44 @@ def minutes_filter(complete_list):
         finally:
             break
 
-    for entry in complete_list:
-        if entry.mins_spent >= first_num and entry.mins_spent <= second_num:
-            filtered_list.append(entry)
+    for item in complete_list:
+        if item.mins_spent >= first_num and item.mins_spent <= second_num:
+            filtered_list.append(item)
     return filtered_list
 
 
 def new_entry(count):
-    """Prompts for a new entry to the existing list of Entrys.
+    """Prompts for a new entry to the existing list of Entry objects.
 
-    :return: the new Entry.
+    :return: the new Entry to be appended to the list.
     """
     new_date = str(datetime.date.today())
+    new_date = "{}/{}/{}".format(new_date[5:7],new_date[8:10],new_date[2:4])
+
     task_name = ""
     mins = 0
 
-    while task_name == "":
+    while not task_name:
+        cls()
         task_name = input("Please enter the task name (Required).\n> ")
     while mins < 1:
+        cls()
         try:
             mins = int(input("Please enter minutes spent (Required)\n> "))
         except:
             input("[Press Enter] and enter a number greater than 0.")
-    notes = input("Add notes:\n> ")
+    cls()
+    notes = input("Add notes (Optional):\n> ")
+    while not notes:
+        try:
+            if input("Leave blank? y/n\n> ")[0].upper() == "y":
+                break
+            else:
+                cls()
+                notes = input("Add notes (Optional):\n> ")
+                continue
+        except:
+            continue
 
     add_entry = Entry(count, new_date, task_name, mins, notes)
 
@@ -294,9 +376,26 @@ def load_csv():
 
     :return: A list of Entry objects.
     """
-    entry_list = []
+    complete_list = []
+    count = 0
+    try:
+        with open("tasklog.csv") as csvfile:
+            rows = list(csv.DictReader(csvfile))
+            for row in rows:
+                count += 1
+                add_entry = Entry(
+                    count,
+                    row["entry_date"],
+                    row["task_name"],
+                    int(row["mins_spent"]),
+                    row["notes"]
+                )
 
-    return entry_list
+                complete_list.append(add_entry)
+    except:
+        save_csv([])
+        complete_list = load_csv()
+    return complete_list
 
 
 def save_csv(updated_list):
@@ -306,12 +405,12 @@ def save_csv(updated_list):
         csvwriter = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
         csvwriter.writeheader()
-        for entry in updated_list:
+        for item in updated_list:
             csvwriter.writerow({
-                "entry_date": entry.entry_date,
-                "task_name": entry.task_name,
-                "mins_spent": entry.mins_spent,
-                "notes": entry.notes
+                "entry_date": item.entry_date,
+                "task_name": item.task_name,
+                "mins_spent": item.mins_spent,
+                "notes": item.notes
             })
 
 
@@ -361,12 +460,15 @@ def display_list(entries):
             else:
                 count = len(entries) - 1
         elif choice == "D":
-            if input("Are you sure? (y/n)\n> ")[0].lower() == "y":
-                deleted_ids.append(entries[count].entry_ID)
-                del (entries[count])
-                count -= 1
-                if count < 0:
-                    count = 0
+            try:
+                if input("Are you sure? (y/n)\n> ")[0].lower() == "y":
+                    deleted_ids.append(entries[count].entry_ID)
+                    del (entries[count])
+                    count -= 1
+                    if count < 0:
+                        count = 0
+            except:
+                continue
         elif choice == "E":
             while True:
                 cls()
@@ -392,26 +494,29 @@ def display_list(entries):
                             new_mins = int(input("New mins: (Must be > 0)\n> "))
                         except:
                             continue
-                        if new_mins:
+                        if new_mins > 0:
                             entries[count].mins_spent = new_mins
                             break
                 elif read_input == "N":
                     while True:
-                        new_notes = input("New notes: \n> ")
-                        if new_notes != "":
-                            entries[count].notes = new_notes
-                            break
-                        elif input("Leave blank? y/n\n> ")[0].upper() == "Y":
-                            entries[count].notes = ""
-                            break
+                        try:
+                            new_notes = input("New notes: \n> ")
+                            if new_notes != "":
+                                entries[count].notes = new_notes
+                                break
+                            elif input("It's blank? y/n\n> ")[0].upper() == "Y":
+                                entries[count].notes = ""
+                                break
+                        except:
+                            continue
                 elif read_input == "D":
                     while True:
                         new_date = input("New date (MM/DD/YYYY)\n> ")
                         if re.match(r'\d{2}/\d{2}/\d{4}', new_date) is not None:
                             entries[count].entry_date = "{}/{}/{}".format(
-                                int(new_date[6:10]),
-                                int(new_date[0:2]),
-                                int(new_date[3:5]))
+                                str(new_date[0:2]),
+                                str(new_date[3:5]),
+                                str(new_date[8:10]))
                             break
                         else:
                             input("[Press Enter] format date in MM/DD/YYYY")
@@ -425,21 +530,7 @@ def display_list(entries):
 
 
 if __name__ == "__main__":
-    complete_list = []
-    count = 0
-    with open("tasklog.csv") as csvfile:
-        rows = list(csv.DictReader(csvfile))
-        for row in rows:
-            count += 1
-            add_entry = Entry(
-                count,
-                row["entry_date"],
-                row["task_name"],
-                int(row["mins_spent"]),
-                row["notes"]
-            )
 
-            complete_list.append(add_entry)
     while True:
         cls()
         print("-----------------------------")
@@ -456,21 +547,25 @@ if __name__ == "__main__":
             continue
 
         if read_input == "N":
-            count += 1
-            complete_list.append(new_entry(count))
+            save_list = load_csv()
+            count = len(save_list) + 1
+            save_list.append(new_entry(count))
+            save_csv(save_list)
         elif read_input == "B":
-            if len(complete_list):
-                display_list(complete_list)
+            save_list = load_csv()
+            if len(save_list):
+                save_list, ignore_list = display_list(save_list)
+                save_csv(save_list)
             else:
                 input("There are no entries to display. [Press Enter]")
         elif read_input == "S":
-            if len(complete_list):
-                complete_list = search_menu(complete_list)
+            save_list = load_csv()
+            if len(save_list):
+                save_list = search_menu(save_list)
             else:
                 input("There are no entries to display. [Press Enter]")
         elif read_input == "Q":
             cls()
-            save_csv(complete_list)
             print("Exiting program.")
             exit()
         else:

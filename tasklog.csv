@@ -1,5 +1,5 @@
 entry_date,task_name,mins_spent,notes
-01/02/17,Other project,116,"Calibrated Shipping Arm. Rotor Sticky, alert mechanic crew."
+01/01/17,Other project,46,Designed blueprints
 01/03/17,Other project,33,Assembled sensor array
 01/04/17,Other project,188,Tested tolerance of sensors
 01/05/17,Other project,69,Wrote code for door sensor
@@ -35,4 +35,5 @@ entry_date,task_name,mins_spent,notes
 02/04/17,Star wars,179,Calibrate communication with Ocean of Storms. Response OK.
 02/05/17,Star wars,186,Calibrate satellite targeting system. Laser off by .017 degrees.
 02/06/17,Star wars,110,Adjust satellite coefficient to account for error.
-02/07/17,Star wars,64,Test fire in Siberia. Launch unnoticed.
+02/07/17,Star wars,64,Test fire in Siberia. Launch unnoticed
+02/06/17,New task,22,Testing the python worklog.
