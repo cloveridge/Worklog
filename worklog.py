@@ -315,7 +315,7 @@ def minutes_filter(complete_list):
             second_num = input("> ")
             if not second_num:
                 second_num = first_num
-            elif second_num >= first_num:
+            elif int(second_num) >= first_num:
                 second_num = int(second_num)
             else:
                 continue
