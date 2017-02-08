@@ -314,7 +314,7 @@ def minutes_filter(complete_list):
         try:
             second_num = input("> ")
             if not second_num:
-                second_num = first_num
+                second_num = int(first_num)
             elif int(second_num) >= first_num:
                 second_num = int(second_num)
             else:
@@ -328,7 +328,7 @@ def minutes_filter(complete_list):
             break
 
     for item in complete_list:
-        if item.mins_spent >= first_num and item.mins_spent <= second_num:
+        if int(item.mins_spent) >= first_num and int(item.mins_spent) <= second_num:
             filtered_list.append(item)
     return filtered_list
 
