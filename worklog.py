@@ -126,8 +126,9 @@ def date_filter(complete_list):
                 # Display a list of dates, and have them pick one
                 dates_to_display = []
                 for item in complete_list:
-                    if item.get_readable_date not in dates_to_display:
-                        dates_to_display.append(item.get_readable_date())
+                    add_date = item.entry_date
+                    if add_date not in dates_to_display:
+                        dates_to_display.append(add_date)
                 print("Available Dates:")
                 for display_date in dates_to_display:
                     print(display_date)
@@ -149,7 +150,7 @@ def date_filter(complete_list):
                     input("[Press Enter] then please type a date above")
                     continue
             for item in complete_list:
-                if str(item.get_readable_date()) == chosen_date:
+                if item.entry_date == chosen_date:
                     filtered_list.append(item)
             break
         elif read_input == "R":
