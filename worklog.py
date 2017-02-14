@@ -387,7 +387,7 @@ def load_csv():
                 add_entry = Entry(
                     count,
                     row["entry_date"],
-                    row["task_name"],
+                    str(row["task_name"]).title(),
                     int(row["mins_spent"]),
                     row["notes"]
                 )
@@ -409,7 +409,7 @@ def save_csv(updated_list):
         for item in updated_list:
             csvwriter.writerow({
                 "entry_date": item.entry_date,
-                "task_name": item.task_name,
+                "task_name": item.task_name.title(),
                 "mins_spent": item.mins_spent,
                 "notes": item.notes
             })
