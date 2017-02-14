@@ -126,7 +126,7 @@ def date_filter(complete_list):
                 # Display a list of dates, and have them pick one
                 dates_to_display = []
                 for item in complete_list:
-                    if item.entry_date not in dates_to_display:
+                    if item.get_readable_date not in dates_to_display:
                         dates_to_display.append(item.get_readable_date())
                 print("Available Dates:")
                 for display_date in dates_to_display:
@@ -339,7 +339,7 @@ def new_entry(count):
     :return: the new Entry to be appended to the list.
     """
     new_date = str(datetime.date.today())
-    new_date = "{}/{}/{}".format(new_date[5:7],new_date[8:10],new_date[2:4])
+    new_date = "{}/{}/{}".format(new_date[5:7], new_date[8:10], new_date[2:4])
 
     task_name = ""
     mins = 0
