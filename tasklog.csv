@@ -1,39 +1,6 @@
 entry_date,task_name,mins_spent,notes
-01/01/17,Other project,46,Designed blueprints
-01/03/17,Other project,33,Assembled sensor array
-01/04/17,Other project,188,Tested tolerance of sensors
-01/05/17,Other project,69,Wrote code for door sensor
-01/06/17,Other project,99,Linked Raspberry Pis
-01/07/17,Other project,95,Consultation with engineer
-01/08/17,Other project,55,Fired Steve. He cried -- a lot.
-01/09/17,Other project,162,Moved entire assembly to testing floor.
-01/10/17,Other project,174,Diagnostic test on sensors
-01/11/17,Other project,173,Recalibration of sensors
-01/12/17,Other project,182,Live-fire test.
-01/13/17,Other project,183,Signed off with R&D Engineer
-01/14/17,F16 testing,153,Designed blueprints
-01/15/17,F16 testing,178,Diagnostic missile launch system. Specifications OK.
-01/16/17,F16 testing,175,Diagnostic ejector system. Acceptable clearance -4.5'.
-01/17/17,F16 testing,193,Diagnostic HUD Targeting system. Failure to recognize friendly tags.
-01/18/17,F16 testing,66,Recalibrate ejector system. Acceptable clearance +.7'
-01/19/17,F16 testing,31,Recalibrate HUD Targeting system. Friendly tags OK. Stealth detection glitchy.
-01/20/17,F16 testing,32,Recalibrate HUD Targeting system. Stealth Detection specifications OK.
-01/21/17,F16 testing,133,Diagnostic rear thrusters. Afterburn system runs 39 degrees too hot. Burns out after 1:29.
-01/22/17,F16 testing,27,Added afterburn inhibitor to code. Specifications OK.
-01/23/17,F16 testing,24,Live flight test. Pilot: Higgins. All sensors and specifications okay. Requested a tighter pull on rear fins.
-01/24/17,F16 testing,19,"Adjusted rear fins, filed report with General Dawe."
-01/25/17,Project manhattan,178,Designed blueprints
-01/26/17,Project manhattan,162,Consulted with Einstein. No idea what he was saying.
-01/27/17,Project manhattan,131,Sculpted miniature version for testing.
-01/28/17,Project manhattan,74,Applied Uranium core to assembly rig.
-01/29/17,Project manhattan,190,Setup and testing in Mojave.
-01/30/17,Project manhattan,78,"Record results, and observe effects upon test housing."
-01/31/17,Project manhattan,145,"Second demonstration for brass. Attendees: General [REDACTED], General [REDACTED], Admiral [REDACTED]. They are satisfied."
-02/01/17,Project manhattan,159,"Loaded Fat Man onto B52, calibrated launch mechanism."
-02/02/17,Star wars,176,Designed blueprints
-02/03/17,Star wars,121,Calibrate communication with Sea of Tranquility. Response OK.
-02/04/17,Star wars,179,Calibrate communication with Ocean of Storms. Response OK.
-02/05/17,Star wars,186,Calibrate satellite targeting system. Laser off by .017 degrees.
-02/06/17,Star wars,110,Adjust satellite coefficient to account for error.
-02/07/17,Star wars,64,Test fire in Siberia. Launch unnoticed
-02/06/17,New task,22,Testing the python worklog.
+02/14/17,Accounts payable,20,"Went through emails, and checked that all of them have been handled by Sonenaly. As well, answered emails pertaining to past-due amounts. Checked their status in bill.com, and messaged any approvers holding them up."
+02/14/17,Accounts receivable,20,Went through emails to identify any for AR. This also includes invoice requests and collections efforts -- nothing to report.
+02/14/17,Accounts payable assistant,10,Updating the code to include the Tax-Exempt Form in the email sent out to new vendors (9:54am).
+02/14/17,Accounts payable assistant,145,10:04am -- Fixing the Statement Auto-Request portion of the APA. 1) Testing functionality. 2) Adding Vendors to list. 3) Creating .bat file to open the Excel program and start the auto-request process.
+02/14/17,Mario request,10,"Ran through the UHC bill ($89,000) and split the expenses out by month (They spanned January and December), then broke them out by individual person. Formatted, and sent to Mario."
