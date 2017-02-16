@@ -7,13 +7,26 @@ of minutes spent working on it, and some notes about what was accomplished.
 
 Entries are stored in a CSV file named "tasklog.csv", and can be displayed
 through a text menu.
+
+Ideas for future updates:
+1) Date list:
+    - If the list of worklog dates spans more than a month, add a layer
+      to the list which summarizes by month. (And again for the year).
+    - For each date entry, display something like
+      "MM/DD/YYYY (3 entries, 2:24 worked)"
+2) Editing entries:
+    - Prefilled command-line text when editing entries. (Entries don't
+      have to be retyped from scratch when editing).
+        + Save the entry in a .txt file, then open that in Vim or a text
+          editor.
 """
 
 
-import datetime
+from datetime import date, time, timedelta, datetime
 import os
 import re
 import csv
+import pytz
 
 from entry import Entry
 
@@ -24,6 +37,22 @@ def cls():
         os.system("clear")
     finally:
         print("\n" * 100)
+
+
+def edit_text(text):
+    with open("temp.txt","w") as file:
+        file.write(text)
+    try:
+        os.system("open -a TextEdit \"temp.txt\"")
+        input("[Press Enter when you've finished and saved the text file.")
+        with open("temp.txt", "r") as file:
+            new_text = file.read()
+        os.system("rm -Rf \"temp.txt\"")
+    except:
+        print("Advanced text editing isn't available on your device.")
+        new_text = input("Please enter the new value:\n> ")
+
+    return new_text
 
 
 def search_menu(complete_list):
@@ -124,6 +153,7 @@ def date_filter(complete_list):
             chosen_date = ""
             while True:
                 # Display a list of dates, and have them pick one
+                cls()
                 dates_to_display = []
                 for item in complete_list:
                     add_date = item.entry_date
@@ -158,7 +188,7 @@ def date_filter(complete_list):
             date1, date2 = get_date_range()
             for item in complete_list:
                 entry_date = item.get_readable_date()
-                temp_date = datetime.date(
+                temp_date = date(
                     int(entry_date[6:10]),
                     int(entry_date[0:2]),
                     int(entry_date[3:5])
@@ -241,17 +271,17 @@ def get_date_range():
 
     :return date1, date2: Two dates which can be searched between.
     """
-    date1 = datetime.date(1900, 1, 1)
-    date2 = datetime.date(1900, 1, 1)
+    date1 = date(1900, 1, 1)
+    date2 = date(1900, 1, 1)
     while True:
         cls()
         print("Using MM/DD/YYYY format, please enter the start date:")
         raw_date = input("> ")
         if re.match(r"\d{2}/\d{2}/\d{4}", raw_date) is not None:
             try:
-                date1 = datetime.date(int(raw_date[6:10]),
-                                  int(raw_date[0:2]),
-                                  int(raw_date[3:5]))
+                date1 = date(int(raw_date[6:10]),
+                             int(raw_date[0:2]),
+                             int(raw_date[3:5]))
                 break
             except:
                 input("[Press Enter] That was not a valid format. Use MM/DD/YYYY")
@@ -264,9 +294,9 @@ def get_date_range():
         print("Using MM/DD/YYYY format, please enter the ending date:")
         raw_date = input("> ")
         if re.match(r"\d{2}/\d{2}/\d{4}", raw_date) is not None:
-            date2 = datetime.date(int(raw_date[6:10]),
-                                  int(raw_date[0:2]),
-                                  int(raw_date[3:5]))
+            date2 = date(int(raw_date[6:10]),
+                         int(raw_date[0:2]),
+                         int(raw_date[3:5]))
             if date2 >= date1:
                 break
             else:
@@ -339,11 +369,11 @@ def new_entry(count):
 
     :return: the new Entry to be appended to the list.
     """
-    new_date = str(datetime.date.today())
+    new_date = str(date.today())
     new_date = "{}/{}/{}".format(new_date[5:7], new_date[8:10], new_date[2:4])
 
     task_name = ""
-    mins = 0
+    mins = use_time_marker()
 
     while not task_name:
         cls()
@@ -355,21 +385,80 @@ def new_entry(count):
         except:
             input("[Press Enter] and enter a number greater than 0.")
     cls()
-    notes = input("Add notes (Optional):\n> ")
-    while not notes:
-        try:
-            if input("Leave blank? y/n\n> ")[0].upper() == "y":
-                break
-            else:
-                cls()
-                notes = input("Add notes (Optional):\n> ")
-                continue
-        except:
+    td = timedelta(minutes=-mins)
+    time2 = datetime.now()
+    time1 = time2 + td
+    print_time = time1.strftime("(%I:%M%p - ") + time2.strftime("%I:%M%p)")
+    notes = print_time
+    add_notes = input("Add notes (Optional):\n> ")
+    while not add_notes:
+        read_input = input("Leave blank? y/n\n> ")[0].upper()
+        if not read_input:
             continue
+        if read_input == "Y":
+            break
+        else:
+            cls()
+            add_notes = input("Add notes (Optional):\n> ")
 
+    notes = notes + " " + add_notes
     add_entry = Entry(count, new_date, task_name, mins, notes)
 
     return add_entry
+
+
+def new_time_marker():
+    overwrite = True
+    if os.path.exists("time_marker.txt"):
+        with open("time_marker.txt","r") as file:
+            marker = file.read()
+        if input("There is already a marker at {}. "
+                 "Would you like to replace it? Y/N\n> ".format(
+                 marker
+                 ))[0].upper() == "N":
+            overwrite = False
+
+    if overwrite:
+        print_time = datetime.now().strftime("%I:%M%p")
+        with open("time_marker.txt", "w") as file:
+            file.write(print_time)
+        input("[Press Enter] Time saved as "
+              + print_time
+              + " for later use when creating an entry.")
+
+
+def use_time_marker():
+
+    try:
+        mins = timedelta()
+        with open("time_marker.txt", "r") as file:
+            marker = datetime.strptime(file.read(), "%I:%M%p")
+            mins = datetime.now() - datetime(year=datetime.now().year,
+                                             month=datetime.now().month,
+                                             day=datetime.now().day,
+                                             hour=marker.hour,
+                                             minute=marker.minute
+                                             )
+        read_input = ""
+        while not read_input:
+            cls()
+            read_input = input("There is a marker at {}. Would you like to use "
+                               "this as your start time? Y/N\n> ".format(
+                                marker.strftime("%I:%M%p")
+                                ))[0].upper()
+            if read_input == "Y":
+                try:
+                    os.system("rm -Rf time_marker.txt")
+                except:
+                    pass
+                return mins.seconds/60
+            elif read_input == "N":
+                return 0
+            else:
+                input("[Press Enter] Then please type Y or N.")
+
+    except:
+        return 0
 
 
 def load_csv():
@@ -387,7 +476,7 @@ def load_csv():
                 add_entry = Entry(
                     count,
                     row["entry_date"],
-                    str(row["task_name"]).title(),
+                    str(row["task_name"]),
                     int(row["mins_spent"]),
                     row["notes"]
                 )
@@ -409,11 +498,49 @@ def save_csv(updated_list):
         for item in updated_list:
             csvwriter.writerow({
                 "entry_date": item.entry_date,
-                "task_name": item.task_name.title(),
+                "task_name": item.task_name,
                 "mins_spent": item.mins_spent,
                 "notes": item.notes
             })
 
+def backup_csv(updated_list):
+    """Saves the CSV file."""
+    with open("backup.csv", "w") as csvfile:
+        fieldnames = ["entry_date", "task_name", "mins_spent", "notes"]
+        csvwriter = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        csvwriter.writeheader()
+        for item in updated_list:
+            csvwriter.writerow({
+                "entry_date": item.entry_date,
+                "task_name": item.task_name,
+                "mins_spent": item.mins_spent,
+                "notes": item.notes
+            })
+    cls()
+    input("[Press Enter] Backup created!")
+
+def load_backup():
+    complete_list = []
+    count = 0
+    try:
+        with open("tasklog.csv") as csvfile:
+            rows = list(csv.DictReader(csvfile))
+            for row in rows:
+                count += 1
+                add_entry = Entry(
+                    count,
+                    row["entry_date"],
+                    str(row["task_name"]),
+                    int(row["mins_spent"]),
+                    row["notes"]
+                )
+
+                complete_list.append(add_entry)
+    except:
+        save_csv([])
+        complete_list = load_csv()
+    return complete_list
 
 def display_list(entries):
     """Prints out any list of entries.
@@ -501,7 +628,7 @@ def display_list(entries):
                 elif read_input == "N":
                     while True:
                         try:
-                            new_notes = input("New notes: \n> ")
+                            new_notes = edit_text(entries[count].notes)
                             if new_notes != "":
                                 entries[count].notes = new_notes
                                 break
@@ -534,14 +661,24 @@ if __name__ == "__main__":
 
     while True:
         cls()
-        print("-----------------------------")
-        print("|Project Tracklog Main Menu:|")
-        print("-----------------------------")
+        marker = ""
+        if os.path.exists("time_marker.txt"):
+            with open("time_marker.txt", "r") as file:
+                marker = "\n   -Currently set to: " + file.read()
+
+        print("--------------------------------")
+        print("|  Project Tracklog Main Menu  |")
+        print("--------------------------------")
         print("[N]ew entry")
+        print("[M]arker (Logs the current time){}".format(
+                                                marker
+        ))
         print("[B]rowse entries")
         print("[S]earch entries")
+        print("[C]reate backup")
+        print("[L]oad backup")
         print("[Q]uit the program")
-        print("-----------------------------")
+        print("--------------------------------")
         try:
             read_input = input("> ")[0].upper()
         except:
@@ -552,6 +689,8 @@ if __name__ == "__main__":
             count = len(save_list) + 1
             save_list.append(new_entry(count))
             save_csv(save_list)
+        elif read_input == "M":
+            new_time_marker()
         elif read_input == "B":
             save_list = load_csv()
             if len(save_list):
@@ -565,9 +704,18 @@ if __name__ == "__main__":
                 save_list = search_menu(save_list)
             else:
                 input("There are no entries to display. [Press Enter]")
+        elif read_input == "C":
+            save_list = load_csv()
+            if len(save_list):
+                backup_csv(save_list)
+            else:
+                input("[Press Enter] Cannot save a blank tasklog.")
+        elif read_input == "L":
+            save_list = load_backup()
+            backup_csv(save_list)
         elif read_input == "Q":
             cls()
             print("Exiting program.")
             exit()
         else:
-            input("[Press Enter] and then please type N, B, S, or Q")
+            input("[Press Enter] and then please type N, M, B, S, C, L, or Q")

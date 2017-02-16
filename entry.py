@@ -8,7 +8,7 @@ class Entry:
     def __init__(self, en, entry_date, task_name="N/A", mins_spent=0, notes=""):
         self.entry_ID = en
         self.entry_date = entry_date
-        self.task_name = task_name.capitalize()
+        self.task_name = task_name.title()
         self.mins_spent = mins_spent
         self.notes = notes
         
