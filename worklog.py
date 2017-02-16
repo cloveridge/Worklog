@@ -437,7 +437,8 @@ def use_time_marker():
                                              month=datetime.now().month,
                                              day=datetime.now().day,
                                              hour=marker.hour,
-                                             minute=marker.minute
+                                             minute=marker.minute,
+                                             second=0
                                              )
         read_input = ""
         while not read_input:
@@ -451,7 +452,7 @@ def use_time_marker():
                     os.system("rm -Rf time_marker.txt")
                 except:
                     pass
-                return mins.seconds/60
+                return int(mins.seconds/60)
             elif read_input == "N":
                 return 0
             else:
@@ -468,7 +469,8 @@ def load_csv():
     """
     complete_list = []
     count = 0
-    try:
+
+    if os.path.exists("tasklog.csv"):
         with open("tasklog.csv") as csvfile:
             rows = list(csv.DictReader(csvfile))
             for row in rows:
@@ -477,14 +479,12 @@ def load_csv():
                     count,
                     row["entry_date"],
                     str(row["task_name"]),
-                    int(row["mins_spent"]),
+                    row["mins_spent"],
                     row["notes"]
                 )
 
                 complete_list.append(add_entry)
-    except:
-        save_csv([])
-        complete_list = load_csv()
+
     return complete_list
 
 
@@ -523,8 +523,8 @@ def backup_csv(updated_list):
 def load_backup():
     complete_list = []
     count = 0
-    try:
-        with open("tasklog.csv") as csvfile:
+    if os.path.exists("backup.csv"):
+        with open("backup.csv") as csvfile:
             rows = list(csv.DictReader(csvfile))
             for row in rows:
                 count += 1
@@ -537,10 +537,10 @@ def load_backup():
                 )
 
                 complete_list.append(add_entry)
-    except:
-        save_csv([])
-        complete_list = load_csv()
-    return complete_list
+        if len(complete_list):
+            save_csv(complete_list)
+    else:
+        input("[Press Enter] There is no backup file yet.")
 
 def display_list(entries):
     """Prints out any list of entries.
@@ -671,7 +671,7 @@ if __name__ == "__main__":
         print("--------------------------------")
         print("[N]ew entry")
         print("[M]arker (Logs the current time){}".format(
-                                                marker
+            marker
         ))
         print("[B]rowse entries")
         print("[S]earch entries")
@@ -683,7 +683,6 @@ if __name__ == "__main__":
             read_input = input("> ")[0].upper()
         except:
             continue
-
         if read_input == "N":
             save_list = load_csv()
             count = len(save_list) + 1
@@ -711,8 +710,7 @@ if __name__ == "__main__":
             else:
                 input("[Press Enter] Cannot save a blank tasklog.")
         elif read_input == "L":
-            save_list = load_backup()
-            backup_csv(save_list)
+            load_backup()
         elif read_input == "Q":
             cls()
             print("Exiting program.")
