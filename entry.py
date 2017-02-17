@@ -1,3 +1,6 @@
+from datetime import datetime
+
+
 class Entry:
     """An entry object.
 
@@ -23,7 +26,7 @@ class Entry:
             disp_day = self.entry_date[3:5]
             disp_month = self.entry_date[0:2]
             disp_year = self.entry_date[6:8]
-            if int(disp_year) > 17:
+            if int(disp_year) > datetime.now().year:
                 disp_year = str(19) + str(disp_year)
             else:
                 disp_year = str(20) + str(disp_year)

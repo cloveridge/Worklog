@@ -9,7 +9,11 @@ entry_date,task_name,mins_spent,notes
 02/14/17,Accounts Receivable,120,Email monitoring for new invoiceable items and other AR-related tasks. Tracking down customer payments. Dealing with system error when creating invoices.
 02/14/17,Employee List For Culture,25,"Fixing the Employee List made for culture. Amanda and Diana said it doesn't work on their macs -- tested it, and it runs fine. Updated  one of the formulas which was treating an empty termination date as a zero instead of an empty string. Everything has been verified and is perfect. The list records were current before the mass layoffs, so they are wrong now. Culture should have the most up-to-date information."
 02/14/17,Accounts Receivable,5,"Argued with Cade Liston about ScoPros -- He kept insisting that ScoPros are prepaid, and I kept insisting that the given name on the sales order had no payments in QuickBooks. Informed that the receiving customer's name must appear in the memo line for us to be able to find their payment in QuickBooks."
-02/16/17,Test,10,(03:08PM - 03:18PM) TEST
-02/16/17,Test,12.283333333333333,(03:18PM - 03:30PM) This better freaking work!
-02/16/17,Test,5.666666666666667,(03:40PM - 03:45PM) Testit!
-02/16/17,Start Time Test,3,(03:46PM - 03:49PM) Test the integer
+02/16/17,Metrics Dashboard,8,"(03:57PM - 04:05PM) Informed by Duke that this isn't ready to go, so I just prepared a few things to make sure it will line up when I enter the new data."
+02/16/17,Collections,70,"(04:06PM - 05:16PM) Handled Collections -- Surprisingly there were no errors, so something's working correctly again. Got most of them done, bso I only have a few left to do tomorrow."
+02/17/17,Worklog,20,"(09:30AM - 09:50AM) Updated the worklog to include updated list options for searching by date -- To add the year and month would be a cool test of my skills, but a huge time-suck on a project that's going to be useless in a month. After setting up most of the pieces for it, I deleted them all -- I'm going to instead clone the repository and turn it into the peewee one."
+02/17/17,Collections,25,(10:04AM - 10:29AM) Tried to do collections but only Autem Novus was prepaid -- everyone else I couldn't find any payment info for.
+02/17/17,Worklog,10,(10:40AM - 10:50AM) Added confirmations to both backup features so the databases wouldn't be overridden accidentally.
+02/17/17,Fedex Report,10,(12:32PM - 01:11PM) Request from Jake Drake. Created a fedex report and summarized data by inbound/outbound to explore options for new shipping company.
+02/17/17,Various,10,(01:32PM - 02:27PM) Email, deposits, and RMAs. Various tasks from Briana and Mario. Edited the Metrics spreadsheet.
+02/17/17,Worklog,10,(02:32PM - 02:42PM) Testing the safety features.

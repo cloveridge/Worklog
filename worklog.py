@@ -14,11 +14,6 @@ Ideas for future updates:
       to the list which summarizes by month. (And again for the year).
     - For each date entry, display something like
       "MM/DD/YYYY (3 entries, 2:24 worked)"
-2) Editing entries:
-    - Prefilled command-line text when editing entries. (Entries don't
-      have to be retyped from scratch when editing).
-        + Save the entry in a .txt file, then open that in Vim or a text
-          editor.
 """
 
 
@@ -26,7 +21,7 @@ from datetime import date, time, timedelta, datetime
 import os
 import re
 import csv
-import pytz
+
 
 from entry import Entry
 
@@ -422,9 +417,6 @@ def new_time_marker():
         print_time = datetime.now().strftime("%I:%M%p")
         with open("time_marker.txt", "w") as file:
             file.write(print_time)
-        input("[Press Enter] Time saved as "
-              + print_time
-              + " for later use when creating an entry.")
 
 
 def use_time_marker():
@@ -503,25 +495,36 @@ def save_csv(updated_list):
                 "notes": item.notes
             })
 
+
 def backup_csv(updated_list):
-    """Saves the CSV file."""
-    with open("backup.csv", "w") as csvfile:
-        fieldnames = ["entry_date", "task_name", "mins_spent", "notes"]
-        csvwriter = csv.DictWriter(csvfile, fieldnames=fieldnames)
-
-        csvwriter.writeheader()
-        for item in updated_list:
-            csvwriter.writerow({
-                "entry_date": item.entry_date,
-                "task_name": item.task_name,
-                "mins_spent": item.mins_spent,
-                "notes": item.notes
-            })
+    """Saves the CSV file in a second location in case something goes wrong."""
     cls()
-    input("[Press Enter] Backup created!")
+    print("This creates a backup of the current tasklog, and overrides"
+          " any existing backup.")
+    if input("Type \"BACKUP\" in all caps to continue:\n> ") == "BACKUP":
 
-def load_backup():
-    complete_list = []
+
+        with open("backup.csv", "w") as csvfile:
+            fieldnames = ["entry_date", "task_name", "mins_spent", "notes"]
+            csvwriter = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+            csvwriter.writeheader()
+            for item in updated_list:
+                csvwriter.writerow({
+                    "entry_date": item.entry_date,
+                    "task_name": item.task_name,
+                    "mins_spent": item.mins_spent,
+                    "notes": item.notes
+                })
+        cls()
+        input("[Press Enter] Backup created!")
+    else:
+        input("[Press Enter] Backup cancelled -- \"BACKUP\" required as input.")
+
+
+def load_backup(current_list):
+    cls()
+    backup_list = []
     count = 0
     if os.path.exists("backup.csv"):
         with open("backup.csv") as csvfile:
@@ -536,11 +539,23 @@ def load_backup():
                     row["notes"]
                 )
 
-                complete_list.append(add_entry)
-        if len(complete_list):
-            save_csv(complete_list)
+                backup_list.append(add_entry)
     else:
         input("[Press Enter] There is no backup file yet.")
+        return
+
+    backup = True
+    if len(current_list) > len(backup_list):
+        print("This will override {} new entries.".format(
+                len(current_list) - len(backup_list)
+                ))
+        print("To override, type \"CONTINUE\" in all caps:")
+        if input("> ") == "CONTINUE":
+            backup = False
+    if backup:
+        save_csv(backup_list)
+        input("[Press Enter] Backup loaded into current list!")
+
 
 def display_list(entries):
     """Prints out any list of entries.
@@ -710,7 +725,7 @@ if __name__ == "__main__":
             else:
                 input("[Press Enter] Cannot save a blank tasklog.")
         elif read_input == "L":
-            load_backup()
+            load_backup(load_csv())
         elif read_input == "Q":
             cls()
             print("Exiting program.")

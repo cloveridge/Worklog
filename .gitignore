@@ -4,3 +4,5 @@ __pycache__
 *.txt
 htmlcov*
 .coverage
+tasklog.csv
+/Users/Christian/GitHub/Worklog/tasklog.csv
