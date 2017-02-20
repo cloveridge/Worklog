@@ -1,6 +1,0 @@
-entry_date,task_name,mins_spent,notes
-02/14/17,Accounts payable,20,"Went through emails, and checked that all of them have been handled by Sonenaly. As well, answered emails pertaining to past-due amounts. Checked their status in bill.com, and messaged any approvers holding them up."
-02/14/17,Accounts receivable,20,Went through emails to identify any for AR. This also includes invoice requests and collections efforts -- nothing to report.
-02/14/17,Accounts payable assistant,10,Updating the code to include the Tax-Exempt Form in the email sent out to new vendors (9:54am).
-02/14/17,Accounts payable assistant,145,10:04am -- Fixing the Statement Auto-Request portion of the APA. 1) Testing functionality. 2) Adding Vendors to list. 3) Creating .bat file to open the Excel program and start the auto-request process.
-02/14/17,Mario request,10,"Ran through the UHC bill ($89,000) and split the expenses out by month (They spanned January and December), then broke them out by individual person. Formatted, and sent to Mario."
