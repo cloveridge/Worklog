@@ -15,5 +15,11 @@ entry_date,task_name,mins_spent,notes
 02/17/17,Collections,25,(10:04AM - 10:29AM) Tried to do collections but only Autem Novus was prepaid -- everyone else I couldn't find any payment info for.
 02/17/17,Worklog,10,(10:40AM - 10:50AM) Added confirmations to both backup features so the databases wouldn't be overridden accidentally.
 02/17/17,Fedex Report,10,(12:32PM - 01:11PM) Request from Jake Drake. Created a fedex report and summarized data by inbound/outbound to explore options for new shipping company.
-02/17/17,Various,10,(01:32PM - 02:27PM) Email, deposits, and RMAs. Various tasks from Briana and Mario. Edited the Metrics spreadsheet.
+02/17/17,Various,10,(01:32PM - 02:27PM) Email
 02/17/17,Worklog,10,(02:32PM - 02:42PM) Testing the safety features.
+02/17/17,Colllections,76,"(02:50PM - 04:06PM) Entered collections for the day. Two invocie errors (16388, 16383)"
+02/17/17,Accounts Receivable,45,(04:06PM - 04:51PM) AR Statements with Briana
+02/20/17,Collections,35,"(08:46AM - 09:21AM) Did collections, minus the ones which require payment."
+02/20/17,Ar Statements,44,"(09:22AM - 10:06AM) Completed AR Statements for customers wiht outstanding balances -- These are usual customers, so I might make an easy Excel sheet which sends out statements for us. Already have the framework up, just need to create a bit of code to check for statement vs. invoice. Estimated this would save approximately 15-20 minutes."
+02/20/17,Email,42,"(10:09AM - 10:51AM) Did collections and followup with various emails. Verified Sonenaly's downloading all of the emails, and helped her out with some UHC invocies so Diana and Amanda don't have issues."
+02/20/17,Worklog,31,"(10:52AM - 11:23AM) Fixing the worklog -- it's including the tasklog on the CSV upload to Github...probably shouldn't have my day-to-day details written for the public to see. Posted in Slack about it, so hopefully they can help me fix it."

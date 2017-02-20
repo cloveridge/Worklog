@@ -1,8 +1,9 @@
 .idea*
 __pycache__
-*.csv
 *.txt
 htmlcov*
 .coverage
+
+*.csv
 tasklog.csv
 /Users/Christian/GitHub/Worklog/tasklog.csv
