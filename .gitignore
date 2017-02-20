@@ -7,3 +7,4 @@ htmlcov*
 *.csv
 tasklog.csv
 /Users/Christian/GitHub/Worklog/tasklog.csv
+*.csv
